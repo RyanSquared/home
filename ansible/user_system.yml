@@ -1,0 +1,25 @@
+---
+# vim: set et ts=2 sw=2:
+- name: run package manager for host
+  hosts: all
+  become: true
+  tasks:
+    - name: Include packages
+      include_role:
+        name: "{{ item }}"
+      with_items:
+        - "user_packages_{{ target_system_role }}"
+
+- name: run as-user commands
+  hosts: all
+  tasks:
+    - name: Include all roles
+      include_role:
+        name: "{{ role_item }}"
+      with_items:
+        - gpg
+        - tmux
+        - vim
+        - zsh
+      loop_control:
+        loop_var: role_item

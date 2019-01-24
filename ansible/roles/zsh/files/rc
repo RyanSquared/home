@@ -1,0 +1,138 @@
+#!/bin/zsh
+
+# vim:set noet sts=0 sw=4 ts=4 foldmethod=marker:
+
+################################################################################
+# This file is sourced only for interactive shells. It
+# should contain commands to set up aliases, functions,
+# options, key bindings, etc.
+#
+# Global Order: zshenv, zprofile, zshrc, zlogin
+################################################################################
+
+source ~/.zsh/grml-etc-core/etc/zsh/zshrc
+fpath=(~/.zsh/grml-etc-core/usr_share_grml/zsh/ $fpath)
+
+stty -ixon
+
+luarocks-upload() {
+	luarocks upload $1 --api-key=3U24K9V614bqQ49TA99N7WN4azWas96PwP2GC96k
+}
+
+. ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+. ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+
+# {{{ Set up gpg-agent
+
+# If connected locally
+if [ -z "$SSH_TTY" ]; then
+
+    # setup local gpg-agent with ssh support and save env to fixed location
+    # so it can be easily picked up and re-used for multiple terminals
+    envfile="$HOME/.gnupg/gpg-agent.env"
+    if [[ ! -e "$envfile" ]] || ( \
+           # deal with changed socket path in gnupg 2.1.13
+           [[ ! -e "$HOME/.gnupg/S.gpg-agent" ]] && \
+           [[ ! -e "/var/run/user/$(id -u)/gnupg/S.gpg-agent" ]]
+       );
+    then
+        killall gpg-agent
+        gpg-agent --daemon --enable-ssh-support > $envfile
+    fi
+
+    # Get latest gpg-agent socket location and expose for use by SSH
+    eval "$(cat "$envfile")" && export SSH_AUTH_SOCK
+
+    # Wake up smartcard to avoid races
+    gpg --card-status > /dev/null 2>&1
+
+fi
+
+# If running remote via SSH
+if [ ! -z "$SSH_TTY" ]; then
+    # Copy gpg-socket forwarded from ssh to default location
+    # This allows local gpg to be used on the remote system transparently.
+    # Strongly discouraged unless GPG managed with a touch-activated GPG
+    # smartcard such as a Yubikey 4.
+    # Also assumes local .ssh/config contains host block similar to:
+    # Host someserver.com
+    #     ForwardAgent yes
+    #     StreamLocalBindUnlink yes
+    #     RemoteForward /home/user/.gnupg/S.gpg-agent.ssh /home/user/.gnupg/S.gpg-agent
+    if [ -e $HOME/.gnupg/S.gpg-agent.ssh ]; then
+        mv $HOME/.gnupg/S.gpg-agent{.ssh,}
+    elif [ -e "/var/run/user/$(id -u)/gnupg/S.gpg-agent" ]; then
+        mv /var/run/user/$(id -u)/gnupg/S.gpg-agent{.ssh,}
+    fi
+
+    # Ensure existing sessions like screen/tmux get latest ssh auth socket
+    # Use fixed location updated on connect so in-memory location always works
+    if [ ! -z "$SSH_AUTH_SOCK" -a \
+        "$SSH_AUTH_SOCK" != "$HOME/.ssh/agent_sock" ];
+    then
+        unlink "$HOME/.ssh/agent_sock" 2>/dev/null
+        ln -s "$SSH_AUTH_SOCK" "$HOME/.ssh/agent_sock"
+    fi
+    export SSH_AUTH_SOCK="$HOME/.ssh/agent_sock"
+fi
+
+# }}}
+
+# something i use for a personal thing
+alias getaverage="cut -d' ' -f2 < data | python3 -c 'import sys; print(sum(map(lambda x: int(str.rstrip(x)), sys.stdin)) / \`wc -l data | cut -d' ' -f1\`)'"
+
+# {{{ Prompt Setup Information
+
+BLUE="%F{blue}"
+RED="%F{red}"
+GREEN="%F{green}"
+CYAN="%F{14}"
+MAGENTA="%F{13}"
+YELLOW="%F{11}"
+WHITE="%F{white}"
+
+grml_prompt_pre_default[user]="$CYAN"
+grml_prompt_pre_default[at]="$MAGENTA"
+grml_prompt_pre_default[host]="$CYAN"
+grml_prompt_pre_default[jobs]="$CYAN"
+grml_prompt_pre_default[path]="$MAGENTA"
+grml_prompt_pre_default[time]="$CYAN"
+grml_prompt_pre_default[percent]="%(?.%2F.%1F)"
+grml_prompt_post_default[percent]="%f"
+
+grml_prompt_token_default[time]="%D{%H:%M:%S} "
+
+grml_vcs_coloured_formats=(
+    format "${MAGENTA}(${CYAN}%s${MAGENTA})${YELLOW}-${MAGENTA}[${CYAN}%b${MAGENTA}]${NO_COLOR} "
+    actionformat "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOR} "
+    rev-branchformat "%b${RED}:${YELLOW}%r"
+)
+
+# required because reasons? dunno.
+grml_vcs_info_set_formats coloured
+
+function prompt_grml_precmd () {
+    emulate -L zsh
+    local grmltheme=grml
+    local -a left_items right_items
+    left_items=(rc change-root user at host path vcs time percent)
+    right_items=()
+
+    prompt_grml_precmd_worker
+}
+
+# }}}
+
+test -f ~/.zsh/rc.post && source ~/.zsh/rc.post
+
+patch_zip() {
+	unzip $1 $2
+	${EDITOR:-vim} $2
+	zip -g $1 $2
+}
+
+for f in "$HOME"/.zsh/rc.d/*; do
+	. "$f"
+done
+
+true

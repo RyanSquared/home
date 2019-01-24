@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+source ~/.zsh/grml-etc-core/etc/zsh/zprofile
+
+test -f ~/.zsh/motd && source ~/.zsh/motd
+
+true

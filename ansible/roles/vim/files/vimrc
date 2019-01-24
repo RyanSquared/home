@@ -1,0 +1,202 @@
+syntax on
+
+set hidden
+set wildmenu
+set path=.,**
+set showcmd
+set hlsearch
+set ignorecase
+set smartcase
+set backspace=indent,eol,start
+set autoindent
+set nostartofline
+set ruler
+set laststatus=2
+set confirm
+set visualbell
+set mouse=a
+set cmdheight=2
+set number relativenumber colorcolumn=80
+set cursorcolumn cursorline
+set modeline
+set exrc
+set viminfo='20,<1000
+set nowrap
+set clipboard=unnamed
+set backupdir=~/.backups,/tmp
+set directory=~/.backups,/tmp
+set foldcolumn=1
+
+set statusline=\ %.20F " Filename
+set statusline+=\ %m " Modified
+set statusline+=\ %r " Read-only
+set statusline+=%= " Swap to right side
+set statusline+=\ [%Y] " File type
+set statusline+=\ \| " Separator
+set statusline+=\ %p%% " Percentage of file
+set statusline+=\ \| " Separator
+set statusline+=\ %c:%l " Column and line
+set noshowmode
+
+let mapleader = ','
+
+" Normal Mode
+nnoremap G G:syn sync fromstart<CR>
+nnoremap Y y$
+nnoremap <Leader>l :nohl<CR>
+nnoremap <Leader>s :w<CR>
+nnoremap <Leader>q :qa<CR>
+nnoremap <Leader>, <C-W>
+nnoremap <Leader>n :bn<CR>
+nnoremap <Leader>p :bp<CR>
+nnoremap <Leader>tn :tabn<CR>
+nnoremap <Leader>tp :tabp<CR>
+nnoremap <Leader>cn :cn<CR>
+nnoremap <Leader>cp :cp<CR>
+nnoremap <Leader>k :ls<CR>
+nnoremap <Leader>b :ls<CR>:b
+nnoremap <Space> za
+" Convert `x.y` to `x["y"]`, useful for Python derps
+nmap ,,f ysaw"ysa"]hx%
+
+" Insert Mode
+inoremap jj <ESC>
+inoremap ,,k <C-O>
+inoremap ,,l <C-O>$
+imap ,,f <ESC>ysaw"ysa"]hx%a
+inoremap <C-K> <C-O>dd
+
+" Terminal Mode
+tnoremap jj <C-\><C-n>
+
+" == Plugins ==
+
+filetype off
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+execute pathogen#infect()
+filetype plugin indent on
+
+" -- Ctrl-P fuzzy search --
+let g:ctrlp_map = ',cp'
+
+" -- Auto Pairs --
+let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
+
+" -- colorscheme configuration --
+augroup ApprenticeOverrides
+autocmd ColorScheme apprentice hi Normal ctermbg=none
+autocmd ColorScheme apprentice hi Comment ctermfg=045
+autocmd ColorScheme apprentice hi CursorLine ctermbg=236
+autocmd ColorScheme apprentice hi CursorLineNr ctermbg=236
+autocmd ColorScheme apprentice hi CursorColumn ctermbg=236
+autocmd ColorScheme apprentice hi StatusLine ctermbg=235 ctermfg=014
+autocmd ColorScheme apprentice hi StatusLineNC ctermfg=013 ctermfg=006
+autocmd ColorScheme apprentice hi MatchParen ctermbg=NONE ctermfg=005
+
+autocmd ColorScheme apprentice hi TabLine ctermbg=238 ctermfg=006
+autocmd ColorScheme apprentice hi TabLineSel ctermbg=238 ctermfg=014
+
+function! InsertStatuslineColor(mode)
+  if a:mode == 'i'
+    hi statusline ctermfg=013
+  elseif a:mode == 'r'
+    hi statusline ctermfg=005
+  else
+    hi statusline ctermfg=005
+  endif
+endfunction
+
+autocmd InsertEnter * call InsertStatuslineColor(v:insertmode)
+autocmd InsertChange * call InsertStatuslineColor(v:insertmode)
+autocmd InsertLeave * hi statusline ctermfg=006
+augroup END
+
+colorscheme apprentice
+set background=dark
+
+" -- UltiSnips --
+let g:UltiSnipsExpandTrigger="<Tab>"
+let g:UltiSnipsJumpForwardTrigger="nn"
+let g:UltiSnipsJumpBackwardTrigger="pp"
+autocmd FileType *.* exec 'UltiSnipsAddFiletypes ' . expand('<amatch>')
+
+" -- buftabline --
+let g:buftabline_numbers = 1
+
+" -- netrw --
+let g:netrw_winsize = -28
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_sort_sequence = '[\/]$,*'
+
+" -- tagbar --
+nnoremap <Leader>t :TagbarToggle<CR>
+
+" -- easytags --
+let g:easytags_async = 1
+
+" -- VimCompletesMe --
+let g:vcm_default_maps = 0
+imap ,n <Plug>vim_completes_me_forward
+imap ,p <Plug>vim_completes_me_backward
+
+" -- Syntastic --
+let g:syntastic_lua_checkers = ['luacheck', 'luac']
+let g:syntastic_fuse_checkers = ['fusion_lint']
+let g:lua_complete_omni = 1
+let g:syntastic_lua_luacheck_args = "--codes"
+
+" -- ALE --
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%:%code%]'
+let g:ale_linters = {
+\  'cpp': ['clang', 'g++'],
+\  'html': [],
+\  'rust': ['rls', 'cargo']
+\}
+
+" -- Language Client
+let g:LanguageClient_serverCommands = {
+\  'rust': ['rustup', 'run', 'nightly', 'rls']
+\}
+let g:LanguageClient_diagnosticsEnable = 0
+
+" -- Jedi --
+let g:jedi#usages_command = "<leader>."
+
+" -- Deoplete --
+let g:deoplete#enable_at_startup = 1
+
+" -- VIM launched with --cmd 'let g:ide = 1' --
+if exists('g:ide')
+	function QFixToggle()
+		if (exists("g:qfix_win"))
+			cclose
+			unlet g:qfix_win
+		else
+			copen
+			let g:qfix_win = 1
+		endif
+	endfunction
+	autocmd vimenter * Lexplore | wincmd l
+	autocmd vimenter * call QFixToggle() | wincmd k
+	autocmd vimenter * Tagbar
+	let g:loaded_golden_ratio = 0
+endif
+
+autocmd FileType cf set sw=2 ts=2 et
+autocmd FileType cf let b:match_words = '<\(\w\w*\):</\1,{:}'
+
+autocmd FileType python set foldmethod=expr
+
+autocmd filetype crontab setlocal nobackup nowritebackup
+
+autocmd FileType html set sw=2 ts=2 et
+autocmd FileType htmldjango set sw=2 ts=2 et
+autocmd FileType cpp set sw=2 ts=2 et
+autocmd FileType json set sw=2 ts=2 et
+autocmd FileType rust set sw=4 ts=4 et
+autocmd FileType sh set sw=2 ts=2 et
+autocmd FileType tf set sw=2 ts=2 et
+autocmd FileType lua set sw=4 ts=4 noet

@@ -1,0 +1,102 @@
+[submodule "ansible/roles/vim/files/bundle/UltiSnips"]
+	path = ansible/roles/vim/files/bundle/UltiSnips
+	url = https://github.com/SirVer/UltiSnips.git
+[submodule "ansible/roles/vim/files/bundle/vim-buftabline"]
+	path = ansible/roles/vim/files/bundle/vim-buftabline
+	url = https://github.com/ap/vim-buftabline
+[submodule "ansible/roles/vim/files/bundle/neocomplete.vim"]
+	path = ansible/roles/vim/files/bundle/neocomplete.vim
+	url = https://github.com/Shougo/neocomplete.vim
+[submodule "ansible/roles/vim/files/bundle/auto-pairs"]
+	path = ansible/roles/vim/files/bundle/auto-pairs
+	url = https://github.com/jiangmiao/auto-pairs.git
+[submodule "ansible/roles/vim/files/bundle/VimCompletesMe"]
+	path = ansible/roles/vim/files/bundle/VimCompletesMe
+	url = https://github.com/ajh17/VimCompletesMe
+[submodule "ansible/roles/vim/files/bundle/nvim-yarp"]
+	path = ansible/roles/vim/files/bundle/nvim-yarp
+	url = https://github.com/roxma/nvim-yarp
+[submodule "ansible/roles/vim/files/bundle/apprentice"]
+	path = ansible/roles/vim/files/bundle/apprentice
+	url = https://github.com/romainl/apprentice
+[submodule "ansible/roles/vim/files/bundle/pest.vim"]
+	path = ansible/roles/vim/files/bundle/pest.vim
+	url = https://github.com/pest-parser/pest.vim
+[submodule "ansible/roles/vim/files/bundle/vim-lua"]
+	path = ansible/roles/vim/files/bundle/vim-lua
+	url = https://github.com/tbastos/vim-lua
+[submodule "ansible/roles/vim/files/bundle/vim-isort"]
+	path = ansible/roles/vim/files/bundle/vim-isort
+	url = https://github.com/fisadev/vim-isort
+[submodule "ansible/roles/vim/files/bundle/LanguageClient-neovim"]
+	path = ansible/roles/vim/files/bundle/LanguageClient-neovim
+	url = https://github.com/autozimu/LanguageClient-neovim
+[submodule "ansible/roles/vim/files/bundle/asyncrun.vim"]
+	path = ansible/roles/vim/files/bundle/asyncrun.vim
+	url = https://github.com/skywind3000/asyncrun.vim
+[submodule "ansible/roles/vim/files/bundle/fusionscript-vim"]
+	path = ansible/roles/vim/files/bundle/fusionscript-vim
+	url = https://github.com/RyanSquared/fusionscript-vim
+[submodule "ansible/roles/vim/files/bundle/vim-hug-neovim-rpc"]
+	path = ansible/roles/vim/files/bundle/vim-hug-neovim-rpc
+	url = https://github.com/roxma/vim-hug-neovim-rpc
+[submodule "ansible/roles/vim/files/bundle/vim-vue"]
+	path = ansible/roles/vim/files/bundle/vim-vue
+	url = https://github.com/posva/vim-vue
+[submodule "ansible/roles/vim/files/bundle/moonscript-vim"]
+	path = ansible/roles/vim/files/bundle/moonscript-vim
+	url = https://github.com/leafo/moonscript-vim
+[submodule "ansible/roles/vim/files/bundle/tagbar"]
+	path = ansible/roles/vim/files/bundle/tagbar
+	url = https://github.com/majutsushi/tagbar
+[submodule "ansible/roles/vim/files/bundle/vim-easytags"]
+	path = ansible/roles/vim/files/bundle/vim-easytags
+	url = https://github.com/xolox/vim-easytags
+[submodule "ansible/roles/vim/files/bundle/gruvbox"]
+	path = ansible/roles/vim/files/bundle/gruvbox
+	url = https://github.com/morhetz/gruvbox.git
+[submodule "ansible/roles/vim/files/bundle/editorconfig-vim"]
+	path = ansible/roles/vim/files/bundle/editorconfig-vim
+	url = https://github.com/editorconfig/editorconfig-vim.git
+[submodule "ansible/roles/vim/files/bundle/vader.vim"]
+	path = ansible/roles/vim/files/bundle/vader.vim
+	url = https://github.com/junegunn/vader.vim
+[submodule "ansible/roles/vim/files/bundle/ctrlp.vim"]
+	path = ansible/roles/vim/files/bundle/ctrlp.vim
+	url = https://github.com/ctrlpvim/ctrlp.vim
+[submodule "ansible/roles/vim/files/bundle/vim-pathogen"]
+	path = ansible/roles/vim/files/bundle/vim-pathogen
+	url = https://github.com/tpope/vim-pathogen.git
+[submodule "ansible/roles/vim/files/bundle/vim-misc"]
+	path = ansible/roles/vim/files/bundle/vim-misc
+	url = https://github.com/xolox/vim-misc
+[submodule "ansible/roles/vim/files/bundle/vim-fugitive"]
+	path = ansible/roles/vim/files/bundle/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive
+[submodule "ansible/roles/vim/files/bundle/vim-indent-guides"]
+	path = ansible/roles/vim/files/bundle/vim-indent-guides
+	url = https://github.com/nathanaelkane/vim-indent-guides.git
+[submodule "ansible/roles/vim/files/bundle/deoplete.nvim"]
+	path = ansible/roles/vim/files/bundle/deoplete.nvim
+	url = https://github.com/Shougo/deoplete.nvim
+[submodule "ansible/roles/vim/files/bundle/vim-surround"]
+	path = ansible/roles/vim/files/bundle/vim-surround
+	url = https://github.com/tpope/vim-surround.git
+[submodule "ansible/roles/vim/files/bundle/vim-snippets"]
+	path = ansible/roles/vim/files/bundle/vim-snippets
+	url = https://github.com/honza/vim-snippets.git
+[submodule "ansible/roles/vim/files/bundle/ale"]
+	path = ansible/roles/vim/files/bundle/ale
+	url = https://github.com/w0rp/ale/
+[submodule "ansible/roles/zsh/files/zsh-syntax-highlighting"]
+	path = ansible/roles/zsh/files/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting
+[submodule "ansible/roles/zsh/files/zsh-autosuggestions"]
+	path = ansible/roles/zsh/files/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "ansible/roles/zsh/files/grml-etc-core"]
+	path = ansible/roles/zsh/files/grml-etc-core
+	url = https://github.com/grml/grml-etc-core
+[submodule "ansible/roles/vim/files/bundle/vim-gitgutter"]
+	path = ansible/roles/vim/files/bundle/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter

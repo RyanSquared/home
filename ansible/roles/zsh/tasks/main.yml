@@ -1,0 +1,14 @@
+- file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/.zsh"
+- name: Copy configuration files
+  synchronize:
+    src: "{{ item.src }}"
+    dest: "{{ ansible_env.HOME }}/{{ item.dest }}"
+  with_items:
+    - {src: "rc", dest: ".zshrc"}
+    - {src: "env", dest: ".zshenv"}
+    - {src: "profile", dest: ".zprofile"}
+    - {src: "grml-etc-core", dest: ".zsh"}
+    - {src: "zsh-syntax-highlighting", dest: ".zsh"}
+    - {src: "zsh-autosuggestions", dest: ".zsh"}

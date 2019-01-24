@@ -1,0 +1,14 @@
+---
+# vim: set et ts=2 sw=2:
+- name: Install vimrc
+  copy:
+    src: vimrc
+    dest: "{{ ansible_env.HOME }}/.vimrc"
+- name: Create plugins directory
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/.vim"
+- name: Copy plugins
+  synchronize:
+    src: bundle/
+    dest: "{{ ansible_env.HOME }}/.vim/bundle"
