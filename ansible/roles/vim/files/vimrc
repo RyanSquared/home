@@ -26,6 +26,7 @@ set clipboard=unnamed
 set backupdir=~/.backups,/tmp
 set directory=~/.backups,/tmp
 set foldcolumn=1
+set updatetime=100
 
 set statusline=\ %.20F " Filename
 set statusline+=\ %m " Modified
@@ -36,6 +37,7 @@ set statusline+=\ \| " Separator
 set statusline+=\ %p%% " Percentage of file
 set statusline+=\ \| " Separator
 set statusline+=\ %c:%l " Column and line
+set statusline+=\  " Right side whitespace padding
 set noshowmode
 
 let mapleader = ','
@@ -153,8 +155,12 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%:%code%]'
 let g:ale_linters = {
 \  'cpp': ['clang', 'g++'],
 \  'html': [],
-\  'rust': ['rls', 'cargo']
+\  'rust': ['rls', 'cargo'],
+\  'python': ['flake8']
 \}
+
+let g:ale_rust_cargo_use_clippy = 1
+let g:ale_rust_cargo_use_check = 0
 
 " -- Language Client
 let g:LanguageClient_serverCommands = {
@@ -192,11 +198,39 @@ autocmd FileType python set foldmethod=expr
 
 autocmd filetype crontab setlocal nobackup nowritebackup
 
-autocmd FileType html set sw=2 ts=2 et
-autocmd FileType htmldjango set sw=2 ts=2 et
-autocmd FileType cpp set sw=2 ts=2 et
-autocmd FileType json set sw=2 ts=2 et
-autocmd FileType rust set sw=4 ts=4 et
-autocmd FileType sh set sw=2 ts=2 et
-autocmd FileType tf set sw=2 ts=2 et
-autocmd FileType lua set sw=4 ts=4 noet
+autocmd FileType html setlocal sw=2 ts=2 et
+autocmd FileType htmldjango setlocal sw=2 ts=2 et
+autocmd FileType cpp setlocal sw=2 ts=2 et
+autocmd FileType json setlocal sw=2 ts=2 et
+autocmd FileType rust setlocal sw=4 ts=4 et
+autocmd FileType sh setlocal sw=2 ts=2 et
+autocmd FileType tf setlocal sw=2 ts=2 et
+autocmd FileType lua setlocal sw=4 ts=4 noet
+autocmd FileType gitcommit setlocal cc=73
+autocmd FileType rust setlocal cc=100
+autocmd FileType yaml setlocal sw=2 ts=2 et
+autocmd FileType teal setlocal sw=4 ts=4 noet
+
+nmap <leader>gsh <Plug>(GitGutterStageHunk)
+nmap <leader>gc <Plug>Gcommit
+
+function! TealGenerateNew()
+	let l:smol = '' " Small name of record
+	let l:lorg = getline('.') " Lorg name of record
+	let l:index = 0
+	while l:index != -1
+		let l:smol = l:smol . l:lorg[l:index]
+		let l:index = match('\u', l:lorg, l:index + 1)
+	endwhile
+	let l:line = printf('function %s.new(%s: %s): %s', l:lorg,
+                            \ tolower(l:smol), l:lorg, l:lorg)
+	call setline('.', l:line)
+	call append('.', 'end')
+	let l:line = printf('	return setmetatable(%s, {__index=%s})',
+	                    \ tolower(l:smol), l:lorg)
+	call append('.', l:line)
+endfunction
+
+command! TealGenerateNew :call TealGenerateNew()
+
+nmap <leader>tgn :TealGenerateNew<CR>
