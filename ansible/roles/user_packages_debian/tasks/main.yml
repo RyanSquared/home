@@ -1,0 +1,18 @@
+---
+# vim:set et sw=2 ts=2:
+- name: run system upgrade [apt]
+  apt:
+    update_cache: true
+    upgrade: true
+- name: install system packages [apt]
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ansible
+    - htop
+    - luarocks
+    - ssh
+    - tmux
+    - vim
+    - zsh

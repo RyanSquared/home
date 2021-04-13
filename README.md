@@ -11,7 +11,7 @@ An SSH key must be used rather than a password.
 
 ```sh
 ansible ansible/user_system.yml -i "192.168.0.1," \
-	--extra-vars "target_system_role = debian"
+	--extra-vars "target_system_role=debian"
 ```
 
 #### Currently Configured Target Systems:
