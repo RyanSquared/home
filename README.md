@@ -17,3 +17,4 @@ ansible ansible/user_system.yml -i "192.168.0.1," \
 #### Currently Configured Target Systems:
 
 - `ubuntu`
+- `debian``
