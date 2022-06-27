@@ -1,0 +1,19 @@
+[Unit]
+Description="systemd unit by RyanSquared"
+
+[Service]
+Type=forking
+
+# Disable /run based socket to avoid issues mounting into Docker
+ExecStartPre=-/usr/bin/rm -r /run/user/%U/gnupg
+ExecStartPre=-/usr/bin/touch /run/user/%U/gnupg
+# Clean up any old sockets
+ExecStartPre=-/usr/bin/rm %h/.gnupg/S.gpg-agent
+ExecStartPre=-/usr/bin/rm %h/.gnupg/S.gpg-agent.ssh
+ExecStartPre=-/usr/bin/rm %h/.gnupg/S.gpg-agent.extra
+ExecStart=/usr/bin/gpg-agent --daemon --enable-ssh-support
+# Grab smartcard quickly before any other potential agents
+ExecStartPost=/usr/bin/gpg --card-status
+
+[Install]
+WantedBy=default.target

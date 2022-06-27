@@ -21,23 +21,28 @@ set cursorcolumn cursorline
 set modeline
 set exrc
 set viminfo='20,<1000
-set nowrap
+set wrap
 set clipboard=unnamed
 set backupdir=~/.backups,/tmp
 set directory=~/.backups,/tmp
 set foldcolumn=1
 set updatetime=100
 
-set statusline=\ %.20F " Filename
-set statusline+=\ %m " Modified
-set statusline+=\ %r " Read-only
-set statusline+=%= " Swap to right side
-set statusline+=\ [%Y] " File type
-set statusline+=\ \| " Separator
-set statusline+=\ %p%% " Percentage of file
-set statusline+=\ \| " Separator
-set statusline+=\ %c:%l " Column and line
-set statusline+=\  " Right side whitespace padding
+function! StatusLine()
+  let left = ['%.20F', '%m', '%r']
+  let right = []
+  if index(['rust'], &ft) >= 0
+    for item in ['[gD]', '[K]', '[,/]']
+      call add(right, item)
+    endfor
+  endif
+  for item in ['[%Y]', '|', '%p%%', '|', '%c:%l']
+    call add(right, item)
+  endfor
+  return ' ' . join(left, ' ') . '%=' . join(right, ' ') . ' '
+endfunction
+
+set statusline=%!StatusLine()
 set noshowmode
 
 let mapleader = ','
@@ -77,9 +82,6 @@ filetype off
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 execute pathogen#infect()
 filetype plugin indent on
-
-" -- Ctrl-P fuzzy search --
-let g:ctrlp_map = ',cp'
 
 " -- Auto Pairs --
 let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
@@ -155,8 +157,7 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%:%code%]'
 let g:ale_linters = {
 \  'cpp': ['clang', 'g++'],
 \  'html': [],
-\  'rust': ['rls', 'cargo'],
-\  'python': ['flake8']
+\  'rust': ['rls', 'cargo']
 \}
 
 let g:ale_rust_cargo_use_clippy = 1
@@ -210,6 +211,7 @@ autocmd FileType gitcommit setlocal cc=73
 autocmd FileType rust setlocal cc=100
 autocmd FileType yaml setlocal sw=2 ts=2 et
 autocmd FileType teal setlocal sw=4 ts=4 noet
+autocmd FileType markdown setlocal spell
 
 nmap <leader>gsh <Plug>(GitGutterStageHunk)
 nmap <leader>gc <Plug>Gcommit
@@ -234,3 +236,30 @@ endfunction
 command! TealGenerateNew :call TealGenerateNew()
 
 nmap <leader>tgn :TealGenerateNew<CR>
+
+function! IsDiff(opt)
+    let isdiff = 0
+
+    if v:progname =~ "diff"
+        let isdiff = isdiff + 1
+    endif
+
+    if &diff == 1
+        let isdiff = isdiff + 1
+    endif
+
+    if a:opt =~ "scrollopt"
+        if &scrollopt =~ "hor"
+            let isdiff = isdiff + 1
+        endif
+    endif
+
+    return isdiff
+endfunction
+
+if IsDiff(expand('<amatch>'))
+    nnoremap ,c ]c
+    nnoremap .c [c
+    let g:ale_enabled = 0
+    call g:gitgutter#disable()
+endif
