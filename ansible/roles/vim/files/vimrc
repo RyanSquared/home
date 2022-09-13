@@ -44,6 +44,8 @@ endfunction
 
 set statusline=%!StatusLine()
 set noshowmode
+set display=lastline
+set list listchars=tab:>\ ,eol:¬,extends:>,precedes:<
 
 let mapleader = ','
 
@@ -58,8 +60,8 @@ nnoremap <Leader>n :bn<CR>
 nnoremap <Leader>p :bp<CR>
 nnoremap <Leader>tn :tabn<CR>
 nnoremap <Leader>tp :tabp<CR>
-nnoremap <Leader>cn :cn<CR>
-nnoremap <Leader>cp :cp<CR>
+nnoremap <Leader>cn ]c
+nnoremap <Leader>cp [c
 nnoremap <Leader>k :ls<CR>
 nnoremap <Leader>b :ls<CR>:b
 nnoremap <Space> za
@@ -83,6 +85,9 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 execute pathogen#infect()
 filetype plugin indent on
 
+" -- Ctrl-P fuzzy search --
+let g:ctrlp_map = ',cp'
+
 " -- Auto Pairs --
 let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
 
@@ -90,6 +95,8 @@ let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
 augroup ApprenticeOverrides
 autocmd ColorScheme apprentice hi Normal ctermbg=none
 autocmd ColorScheme apprentice hi Comment ctermfg=045
+autocmd ColorScheme apprentice hi Special ctermfg=067
+autocmd ColorScheme apprentice hi PreProc ctermfg=068
 autocmd ColorScheme apprentice hi CursorLine ctermbg=236
 autocmd ColorScheme apprentice hi CursorLineNr ctermbg=236
 autocmd ColorScheme apprentice hi CursorColumn ctermbg=236
@@ -151,17 +158,32 @@ let g:lua_complete_omni = 1
 let g:syntastic_lua_luacheck_args = "--codes"
 
 " -- ALE --
+let g:ale_virtualtext_cursor = 2
+let g:ale_floating_preview = 1
+let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰']
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%:%code%]'
 let g:ale_linters = {
 \  'cpp': ['clang', 'g++'],
 \  'html': [],
-\  'rust': ['rls', 'cargo']
+\  'rust': ['analyzer'],
+\  'python': ['flake8']
+\}
+let g:ale_rust_analyzer_config = {
+\  'rust-analyzer.diagnostics.disabled': ['inactive-code']
+\}
+let g:ale_fixers = {
+\  'rust': ['rustfmt']
 \}
 
 let g:ale_rust_cargo_use_clippy = 1
 let g:ale_rust_cargo_use_check = 0
+
+nmap gD <Plug>(ale_go_to_definition_in_vsplit)
+nmap K <Plug>(ale_hover)
+imap <C-K> <C-O><Plug>(ale_hover)
+nmap <Leader>/ <Plug>(ale_detail)
 
 " -- Language Client
 let g:LanguageClient_serverCommands = {
@@ -174,6 +196,10 @@ let g:jedi#usages_command = "<leader>."
 
 " -- Deoplete --
 let g:deoplete#enable_at_startup = 1
+
+" -- context.vim
+" To enable: :ContextToggle<CR>
+let g:context_enabled = 0
 
 " -- VIM launched with --cmd 'let g:ide = 1' --
 if exists('g:ide')
