@@ -31,13 +31,9 @@ esac
 export GPG_TTY=$(tty)
 export DIRSTACKFILE=$(mktemp)
 export COOKIEJAR="$HOME/.config/curl/cookiejar"
-export RUSTFLAGS=-Awarnings
-export MUSIC_SERVER="music.local"
 
 alias curl="curl --cookie $COOKIEJAR --cookie-jar $COOKIEJAR"
 alias jurl="curl --cookie $COOKIEJAR --cookie-jar $COOKIEJAR -H 'Content-Type: application/json'"
-alias music="mpc --host=$MUSIC_SERVER"
-alias ncmpcpp="$(which ncmpcpp) --host=$MUSIC_SERVER"
 # alias make="make -j$(($(nproc) - 1))"
 alias taint="touch -d1/1/1970"
 
@@ -45,38 +41,13 @@ evim() {
 	vim "+find $1"
 }
 
-m() {
-	case $1 in
-		v)
-			music volume $2
-			;;
-		p)
-			music prev
-			;;
-		n)
-			music next
-			;;
-		t)
-			music toggle
-			;;
-		*)
-			music $@
-			;;
-	esac;
-		
-}
-
 export LSCOLORS=gxFxBxDxCxegedabagacad
 export PYENV_ROOT="$HOME/.pyenv"
 
 echo "$PATH" | grep -F "$HOME/go/bin" >&- 2>&- || export PATH="$HOME/go/bin:$PATH"
 echo "$PATH" | grep -F "$HOME/.cargo/bin" >&- 2>&- || export PATH="$HOME/.cargo/bin:$PATH"
-echo "$PATH" | grep -F "$HOME/Library/Python/3.7/bin" >&- 2>&- || export PATH="$HOME/Library/Python/3.7/bin:$PATH"
-echo "$PATH" | grep -F "$HOME/.gem/ruby" >&- 2>&- || export PATH="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin:$PATH"
-echo "$PATH" | grep -F "$HOME/.luarocks/bin" >&- 2>&-|| export PATH="$HOME/.luarocks/bin:$PATH"
 echo "$PATH" | grep -F "$HOME/.local/bin" >&- 2>&- || export PATH="$HOME/.local/bin:$PATH"
-echo "$PATH" | grep -F "$HOME/.local/bin/lua-53" >&- 2>&- || export PATH="$HOME/.local/bin/lua-53:$PATH"
 echo "$PATH" | grep -F "$HOME/bin" >&- 2>&-|| export PATH="$HOME/bin:$PATH"
-echo "$PATH" | grep -F "$PYENV_ROOT/bin" >&- 2>&-|| export PATH="$PYENV_ROOT/bin:$PATH"
 
-eval `luarocks path`
+# for qubes systems; this is almost always "vault"
+export QUBES_GPG_DOMAIN=vault
