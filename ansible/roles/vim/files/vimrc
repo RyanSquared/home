@@ -107,6 +107,11 @@ autocmd ColorScheme apprentice hi MatchParen ctermbg=NONE ctermfg=005
 autocmd ColorScheme apprentice hi TabLine ctermbg=238 ctermfg=006
 autocmd ColorScheme apprentice hi TabLineSel ctermbg=238 ctermfg=014
 
+autocmd ColorScheme apprentice hi DiffAdd ctermbg=235 ctermfg=108
+autocmd ColorScheme apprentice hi DiffChange ctermbg=235 ctermfg=103
+autocmd ColorScheme apprentice hi DiffDelete ctermbg=235 ctermfg=131
+autocmd ColorScheme apprentice hi DiffText ctermbg=235 ctermfg=208
+
 function! InsertStatuslineColor(mode)
   if a:mode == 'i'
     hi statusline ctermfg=013
